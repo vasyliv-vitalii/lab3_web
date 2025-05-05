@@ -1,26 +1,32 @@
-import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import React from "react";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
+import CallbackPage from "./CallBack";
 
-function App() {
+const CASDOOR_CLIENT_ID = "559e37c6271af97b3566";
+const CASDOOR_REDIRECT_URI = "https://localhost:3000/auth/casdoor/callback";
+const CASDOOR_AUTH_URL = "https://localhost:8443/login/oauth/authorize";
+
+const App = () => {
+  const handleLogin = () => {
+    const authUrl = `${CASDOOR_AUTH_URL}?client_id=${CASDOOR_CLIENT_ID}&redirect_uri=${encodeURIComponent(
+      CASDOOR_REDIRECT_URI
+    )}&response_type=code&scope=openid profile email`;
+    window.location.href = authUrl; // Переадресовуємо на Casdoor
+  };
+
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Router>
+      <div className="App">
+        <header className="App-header">
+          <button onClick={handleLogin}>Login with Casdoor</button>
+        </header>
+
+        <Routes>
+          <Route path="/callback" element={<CallbackPage />} />
+        </Routes>
+      </div>
+    </Router>
   );
-}
+};
 
 export default App;
