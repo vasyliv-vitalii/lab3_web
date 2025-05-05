@@ -1,57 +1,28 @@
 import React, { useEffect, useState } from "react";
-import { jwtDecode } from "jwt-decode";
+import axios from "axios";
 
-// Define the type for the decoded token
-interface DecodedToken {
-  owner: string;
+interface ServerUser {
   name: string;
-  createdTime: string;
-  updatedTime: string;
-  id: string;
-  type: string;
-  password: string;
   displayName: string;
-  firstName: string;
-  lastName: string;
-  avatar: string;
   email: string;
-  emailVerified: boolean;
-  phone: string;
-  countryCode: string;
-  region: string;
-  affiliation: string;
-  title: string;
-  score: number;
-  karma: number;
-  ranking: number;
+  avatar: string;
   isAdmin: boolean;
-  isForbidden: boolean;
-  isDeleted: boolean;
-  tokenType: string;
-  tag: string;
-  scope: string;
-  azp: string;
-  iss: string;
-  sub: string;
-  aud: string[];
-  exp: number;
-  nbf: number;
-  iat: number;
-  jti: string;
 }
 
 const CallbackPage = () => {
-  const [user, setUser] = useState<DecodedToken | null>(null); // Define the type for the state
+  const [user, setUser] = useState<ServerUser | null>(null);
 
   useEffect(() => {
-    const token = new URLSearchParams(window.location.search).get("token");
-
-    if (token) {
-      // Decode the token
-      const decodedToken: DecodedToken = jwtDecode(token);
-      console.log(decodedToken); // This will log the decoded token
-      setUser(decodedToken); // Set the decoded token as user
-    }
+    axios
+      .get("https://localhost:3000/auth/casdoor/profile", {
+        withCredentials: true,
+      })
+      .then((res) => {
+        setUser(res.data);
+      })
+      .catch((err) => {
+        console.error("Failed to fetch user profile", err);
+      });
   }, []);
 
   return (
@@ -61,11 +32,12 @@ const CallbackPage = () => {
         <div>
           <p>Welcome, {user.name}</p>
           <p>Email: {user.email}</p>
-          <p>Role: {user.type}</p>
-          <img src={user.avatar} alt="User Avatar" />
+          <p>Display Name: {user.displayName}</p>
+          <p>Role: {user.isAdmin ? "Admin" : "User"}</p>
+          <img src={user.avatar} alt="User Avatar" width={100} />
         </div>
       ) : (
-        <p>Loading...</p>
+        <p>Loading user profile...</p>
       )}
     </div>
   );
