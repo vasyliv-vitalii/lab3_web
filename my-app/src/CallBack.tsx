@@ -1,5 +1,6 @@
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import axios from "axios";
+import "./CallBack.css";
 
 interface ServerUser {
   name: string;
@@ -11,8 +12,10 @@ interface ServerUser {
 
 const CallbackPage = () => {
   const [user, setUser] = useState<ServerUser | null>(null);
+  const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
+  const fetchProfile = () => {
+    setLoading(true);
     axios
       .get("https://localhost:3000/auth/casdoor/profile", {
         withCredentials: true,
@@ -22,13 +25,21 @@ const CallbackPage = () => {
       })
       .catch((err) => {
         console.error("Failed to fetch user profile", err);
+        alert("Failed to load user data.");
+      })
+      .finally(() => {
+        setLoading(false);
       });
-  }, []);
+  };
 
   return (
-    <div>
+    <div className="mainCallBackContainer">
       <h1>Callback Page</h1>
-      {user ? (
+      <button  className="loadUserButton" onClick={fetchProfile} disabled={loading}>
+        {loading ? "Loading..." : "Load User from Cookie"}
+      </button>
+
+      {user && (
         <div>
           <p>Welcome, {user.name}</p>
           <p>Email: {user.email}</p>
@@ -36,8 +47,6 @@ const CallbackPage = () => {
           <p>Role: {user.isAdmin ? "Admin" : "User"}</p>
           <img src={user.avatar} alt="User Avatar" width={100} />
         </div>
-      ) : (
-        <p>Loading user profile...</p>
       )}
     </div>
   );

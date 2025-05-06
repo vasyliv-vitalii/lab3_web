@@ -1,0 +1,48 @@
+.mainLoginContainer {
+    display:flex;
+    justify-content: center;
+    align-items: center;
+    flex-direction: column;
+    height:100%;
+    width: 100%;
+}
+
+.loginButtonS {
+    padding: 12px 24px;
+    background-color: #007bff;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    height:10%;
+    width:40%;
+}
+
+.checkStatus{
+    padding: 12px 24px;
+    background-color:green;
+    color: white;
+    cursor: pointer;
+    border-radius: 4px;
+    margin-top: 20px;
+    font-weight: bold;
+    text-align: center;
+    height:10%;
+    width:40%;
+}
+
+.checkStatus:hover {
+    background-color: #04721f; 
+}
+
+.loginButtonS:hover {
+    background-color: #0056b3; 
+}
+
+.buttonContainer{
+    display: flex;
+    justify-content: space-around;
+    width:30%;
+}
