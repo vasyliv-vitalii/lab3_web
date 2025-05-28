@@ -1,14 +1,15 @@
 import { Injectable, Logger } from '@nestjs/common';
 import * as WebSocket from 'ws';
-import { Trade } from 'protobuf/generated/trade';
-import { SocketGateway } from './SocketGateway'; 
+import { Trade } from 'src/protobuf/generated/trade'; 
+import { SocketGateway } from './SocketGateway';
 
 @Injectable()
 export class BinanceService {
   private binanceWs: WebSocket | null = null;
   private isConnected = false;
   private readonly logger = new Logger(BinanceService.name);
-  private readonly streamUrl = 'wss://stream.binance.com:9443/ws/btcusdt@trade';
+  private readonly streamUrl =
+    'wss://stream.binance.com:9443/stream?streams=btcusdt@trade/ethusdt@trade/bnbusdt@trade';
 
   constructor(private readonly socketGateway: SocketGateway) {}
 
@@ -69,14 +70,18 @@ export class BinanceService {
   private processData(data: Buffer) {
     try {
       const jsonData = JSON.parse(data.toString());
+
+      const stream = jsonData.stream;
+      const tradeData = jsonData.data;
+
       const trade = Trade.fromJSON({
-        stream: 'btcusdt@trade',
-        coin: jsonData.s,
-        price: jsonData.p,
-        quantity: jsonData.q,
-        tradeTime: jsonData.T.toString()
+        stream,
+        coin: tradeData.s,
+        price: tradeData.p,
+        quantity: tradeData.q,
+        tradeTime: tradeData.T.toString()
       });
-      
+
       this.socketGateway.sendTradeData(trade);
     } catch (error) {
       this.logger.error('Data processing error:', error);

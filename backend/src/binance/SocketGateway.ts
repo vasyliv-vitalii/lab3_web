@@ -1,8 +1,7 @@
 import { WebSocketGateway, WebSocketServer, OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect } from '@nestjs/websockets';
 import { Server, Socket } from 'socket.io';
 import { Logger } from '@nestjs/common';
-import { Trade } from 'protobuf/generated/trade'; 
-
+import { Trade } from 'src/protobuf/generated/trade';
 @WebSocketGateway(8080, {
   cors: {
     origin: 'http://localhost:3000',

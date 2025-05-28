@@ -2,7 +2,7 @@ import { useState, useEffect, useRef } from "react";
 import axios from "axios";
 import io from 'socket.io-client';
 import "./CallBack.css";
-import { Trade } from "./proto/trade";
+import { Trade } from "./protobuf/generated/trade";
 
 interface ServerUser {
   name: string;

@@ -2,8 +2,8 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import * as fs from 'fs';
 import * as cookieParser from 'cookie-parser';
-
 async function bootstrap() {
+  
   const httpsOptions = {
     key: fs.readFileSync(
       'D:\\lab3_web\\lab3_web\\casdoor\\keys\\localhost-key.pem',
